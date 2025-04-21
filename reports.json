@@ -1,0 +1,28 @@
+[
+    {
+        "id": 1,
+        "user_name": "bp23092004",
+        "user_email": "bp23092004@gmail.com",
+        "bully_name": "rohan",
+        "platform": "social_media",
+        "incident_date": "2025-09-23",
+        "report": "dsgfdhgh",
+        "evidence": "",
+        "severity": "low",
+        "submission_date": "2025-04-01 23:01:38",
+        "status": "pending"
+    },
+    {
+        "id": 2,
+        "user_name": "sahil",
+        "user_email": "sahil@gmail.com",
+        "bully_name": "sandesh",
+        "platform": "social_media",
+        "incident_date": "2025-09-04",
+        "report": "sfdsgfvzd",
+        "evidence": "",
+        "severity": "high",
+        "submission_date": "2025-04-01 23:02:28",
+        "status": "pending"
+    }
+]

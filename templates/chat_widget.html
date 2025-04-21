@@ -1,0 +1,323 @@
+<!-- Chat Widget -->
+<div id="chat-widget" class="chat-widget">
+    <div id="chat-icon" class="chat-icon">
+        <i class="fas fa-robot"></i>
+    </div>
+    <div id="chat-box" class="chat-box">
+        <div id="chat-header" class="chat-header">
+            <div class="chat-header-content">
+                <i class="fas fa-robot"></i>
+                <span>Support Chat</span>
+            </div>
+            <button id="close-chat" class="close-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="chat-body" class="chat-body">
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot">
+                    <div class="avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        Hello! I'm your support assistant. How can I help you today?
+                    </div>
+                </div>
+                <div class="quick-replies">
+                    <button class="quick-reply" onclick="sendMessage('What is cyberbullying?')">What is cyberbullying?</button>
+                    <button class="quick-reply" onclick="sendMessage('How to report cyberbullying?')">How to report cyberbullying?</button>
+                    <button class="quick-reply" onclick="sendMessage('Emergency contacts')">Emergency contacts</button>
+                    <button class="quick-reply" onclick="sendMessage('Prevention tips')">Prevention tips</button>
+                </div>
+            </div>
+            <div class="chat-input">
+                <form id="chat-form" onsubmit="return handleSubmit(event)">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="user-input" placeholder="Type your message..." required>
+                        <button type="submit" class="btn btn-send">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.chat-widget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.chat-icon {
+    width: 60px;
+    height: 60px;
+    background: #1e3c72;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.chat-icon i {
+    font-size: 24px;
+    color: white;
+}
+
+.chat-icon:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.chat-box {
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 350px;
+    height: 500px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    display: none;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+
+.chat-box.show {
+    display: flex;
+}
+
+.chat-header {
+    background: #1e3c72;
+    color: white;
+    padding: 15px;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-header-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chat-header i {
+    font-size: 1.2rem;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    transition: transform 0.3s ease;
+}
+
+.close-btn:hover {
+    transform: scale(1.1);
+}
+
+.chat-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.message {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.message.bot {
+    flex-direction: row;
+}
+
+.message.user {
+    flex-direction: row-reverse;
+}
+
+.message-content {
+    max-width: 80%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    margin: 0 10px;
+    font-size: 0.9rem;
+}
+
+.bot .message-content {
+    background: #f0f2f5;
+    color: #1e3c72;
+}
+
+.user .message-content {
+    background: #1e3c72;
+    color: white;
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1e3c72;
+    color: white;
+    font-size: 0.8rem;
+}
+
+.chat-input {
+    padding: 15px;
+    background: white;
+    border-top: 1px solid #e1e1e1;
+}
+
+.input-group {
+    background: #f0f2f5;
+    border-radius: 20px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.form-control {
+    border: none;
+    background: transparent;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+}
+
+.form-control:focus {
+    box-shadow: none;
+}
+
+.btn-send {
+    background: #1e3c72;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-size: 0.8rem;
+}
+
+.btn-send:hover {
+    background: #2a5298;
+    transform: scale(1.05);
+}
+
+.quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.quick-reply {
+    background: #f0f2f5;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 15px;
+    color: #1e3c72;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.8rem;
+}
+
+.quick-reply:hover {
+    background: #1e3c72;
+    color: white;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatIcon = document.getElementById('chat-icon');
+    const chatBox = document.getElementById('chat-box');
+    const closeBtn = document.getElementById('close-chat');
+    
+    // Show chat box when clicking the icon
+    chatIcon.addEventListener('click', function() {
+        chatBox.classList.add('show');
+    });
+    
+    // Hide chat box when clicking close button
+    closeBtn.addEventListener('click', function() {
+        chatBox.classList.remove('show');
+    });
+});
+
+function addMessage(message, isUser = false) {
+    const messagesDiv = document.getElementById('chat-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+    
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar';
+    avatar.innerHTML = isUser ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+    
+    const content = document.createElement('div');
+    content.className = 'message-content';
+    content.textContent = message;
+    
+    messageDiv.appendChild(avatar);
+    messageDiv.appendChild(content);
+    messagesDiv.appendChild(messageDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+function sendMessage(message) {
+    if (!message) {
+        const input = document.getElementById('user-input');
+        message = input.value;
+        input.value = '';
+    }
+    
+    if (message.trim()) {
+        addMessage(message, true);
+        // Send message to server
+        fetch('/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            addMessage(data.response);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage('Sorry, I encountered an error. Please try again.');
+        });
+    }
+}
+
+function handleSubmit(event) {
+    event.preventDefault();
+    sendMessage();
+    return false;
+}
+</script> 

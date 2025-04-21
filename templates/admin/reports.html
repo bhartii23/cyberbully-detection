@@ -1,0 +1,149 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Bullying Reports</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>User Information</th>
+                                    <th>Bully Information</th>
+                                    <th>Incident Details</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for report in reports %}
+                                <tr>
+                                    <td>{{ report.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    <td>
+                                        <strong>Name:</strong> {{ report.user_name }}<br>
+                                        <strong>Email:</strong> {{ report.user_email }}<br>
+                                        <strong>Report Date:</strong> {{ report.created_at.strftime('%Y-%m-%d %H:%M') }}
+                                    </td>
+                                    <td>
+                                        <strong>Name:</strong> {{ report.bully_name or 'Not provided' }}<br>
+                                        <strong>Contact:</strong> {{ report.bully_contact or 'Not provided' }}<br>
+                                        <strong>Platform:</strong> {{ report.platform or 'Not specified' }}
+                                    </td>
+                                    <td>
+                                        <strong>Date:</strong> {{ report.incident_date or 'Not specified' }}<br>
+                                        <strong>Description:</strong> {{ report.incident_description or 'No description provided' }}<br>
+                                        <strong>Severity:</strong> 
+                                        <span class="badge badge-{{ 'danger' if report.severity == 'extreme' else 'warning' if report.severity == 'high' else 'info' }}">
+                                            {{ report.severity|title }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-{{ 'success' if report.status == 'resolved' else 'warning' if report.status == 'pending' else 'danger' }}">
+                                            {{ report.status|title }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#reportModal{{ report._id }}">
+                                            <i class="fas fa-eye"></i> View Details
+                                        </button>
+                                        <form action="{{ url_for('delete_report', report_id=report._id) }}" method="POST" class="d-inline">
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this report?')">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+
+                                <!-- Modal for detailed view -->
+                                <div class="modal fade" id="reportModal{{ report._id }}" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel{{ report._id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="reportModalLabel{{ report._id }}">Detailed Report Information</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="card mb-3">
+                                                            <div class="card-header bg-primary text-white">
+                                                                <h6 class="mb-0">User Information</h6>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <p><strong>Name:</strong> {{ report.user_name }}</p>
+                                                                <p><strong>Email:</strong> {{ report.user_email }}</p>
+                                                                <p><strong>Report Date:</strong> {{ report.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="card mb-3">
+                                                            <div class="card-header bg-danger text-white">
+                                                                <h6 class="mb-0">Bully Information</h6>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <p><strong>Name:</strong> {{ report.bully_name or 'Not provided' }}</p>
+                                                                <p><strong>Contact:</strong> {{ report.bully_contact or 'Not provided' }}</p>
+                                                                <p><strong>Platform:</strong> {{ report.platform or 'Not specified' }}</p>
+                                                                <p><strong>Severity:</strong> 
+                                                                    <span class="badge badge-{{ 'danger' if report.severity == 'extreme' else 'warning' if report.severity == 'high' else 'info' }}">
+                                                                        {{ report.severity|title }}
+                                                                    </span>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="card mb-3">
+                                                            <div class="card-header bg-info text-white">
+                                                                <h6 class="mb-0">Incident Details</h6>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <p><strong>Date:</strong> {{ report.incident_date or 'Not specified' }}</p>
+                                                                <p><strong>Description:</strong></p>
+                                                                <p class="text-muted">{{ report.incident_description or 'No description provided' }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {% if report.evidence %}
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="card">
+                                                            <div class="card-header bg-success text-white">
+                                                                <h6 class="mb-0">Evidence</h6>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <p class="text-muted">{{ report.evidence }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

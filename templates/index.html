@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberbullying Detection</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background: #1e3c72 !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+        .main-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .analysis-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .form-control {
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 0.2rem rgba(30, 60, 114, 0.25);
+        }
+        .btn-analyze {
+            background: #1e3c72;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-analyze:hover {
+            background: #2a5298;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3);
+        }
+        .result-section {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+        .result-bullying {
+            background: #fff5f5;
+            border: 1px solid #ffcdd2;
+        }
+        .result-safe {
+            background: #f1f8e9;
+            border: 1px solid #c8e6c9;
+        }
+        .result-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        .result-bullying .result-icon {
+            color: #dc3545;
+        }
+        .result-safe .result-icon {
+            color: #28a745;
+        }
+        .btn-report {
+            background: #dc3545;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        .btn-report:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-shield-alt mr-2"></i>Cyberbullying Detection
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('dashboard') }}">
+                            <i class="fas fa-tachometer-alt mr-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">
+                            <i class="fas fa-sign-out-alt mr-1"></i>Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="analysis-card">
+            <h2 class="mb-4">Check for Cyberbullying</h2>
+            
+            <form method="POST">
+                <div class="form-group">
+                    <label for="text">Enter text to analyze</label>
+                    <textarea class="form-control" id="text" name="text" rows="5" required placeholder="Enter the text you want to analyze for cyberbullying..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-analyze">
+                    <i class="fas fa-search mr-2"></i>Analyze Text
+                </button>
+            </form>
+
+            {% if prediction is not none %}
+                <div class="result-section {% if prediction == -1 %}result-bullying{% else %}result-safe{% endif %}" style="display: block;">
+                    <div class="text-center">
+                        <div class="result-icon">
+                            {% if prediction == -1 %}
+                                <i class="fas fa-exclamation-triangle"></i>
+                            {% else %}
+                                <i class="fas fa-check-circle"></i>
+                            {% endif %}
+                        </div>
+                        <h4>
+                            {% if prediction == -1 %}
+                                Cyberbullying Detected
+                            {% else %}
+                                No Cyberbullying Detected
+                            {% endif %}
+                        </h4>
+                        <p class="mb-0">
+                            {% if prediction == -1 %}
+                                This text appears to contain cyberbullying content.
+                            {% else %}
+                                This text appears to be safe and does not contain cyberbullying content.
+                            {% endif %}
+                        </p>
+                        
+                        {% if prediction == -1 %}
+                            <a href="{{ url_for('report') }}" class="btn btn-report">
+                                <i class="fas fa-flag mr-2"></i>Report This Incident
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% include 'chat_widget.html' %}
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

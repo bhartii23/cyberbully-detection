@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Bullying - Cyberbullying Detection</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background: #1e3c72 !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+        .main-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .report-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .form-control {
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 0.2rem rgba(30, 60, 114, 0.25);
+        }
+        .btn-submit {
+            background: #1e3c72;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-submit:hover {
+            background: #2a5298;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3);
+        }
+        .user-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-shield-alt mr-2"></i>Cyberbullying Detection
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('dashboard') }}">
+                            <i class="fas fa-tachometer-alt mr-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">
+                            <i class="fas fa-sign-out-alt mr-1"></i>Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="report-card">
+            <h2 class="mb-4">Report Cyberbullying</h2>
+            
+            <div class="user-info">
+                <h5>Your Information</h5>
+                <p class="mb-0"><strong>Name:</strong> {{ user.name }}</p>
+                <p class="mb-0"><strong>Email:</strong> {{ user.email }}</p>
+            </div>
+
+            <form method="POST">
+                <div class="form-group">
+                    <label for="bully_name">Name of the Bully (if known)</label>
+                    <input type="text" class="form-control" id="bully_name" name="bully_name" placeholder="Enter the name of the bully">
+                </div>
+
+                <div class="form-group">
+                    <label for="platform">Platform where the incident occurred</label>
+                    <select class="form-control" id="platform" name="platform" required>
+                        <option value="">Select a platform</option>
+                        <option value="social_media">Social Media</option>
+                        <option value="email">Email</option>
+                        <option value="messaging">Messaging Apps</option>
+                        <option value="gaming">Gaming Platforms</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="incident_date">When did this happen?</label>
+                    <input type="date" class="form-control" id="incident_date" name="incident_date" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="report">Describe the incident in detail</label>
+                    <textarea class="form-control" id="report" name="report" rows="5" required placeholder="Please provide details about the cyberbullying incident..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="evidence">Additional Evidence (if any)</label>
+                    <textarea class="form-control" id="evidence" name="evidence" rows="3" placeholder="Any screenshots, messages, or other evidence you can share..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="severity">Severity Level</label>
+                    <select class="form-control" id="severity" name="severity" required>
+                        <option value="">Select severity level</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="extreme">Extreme</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-submit">
+                    <i class="fas fa-paper-plane mr-2"></i>Submit Report
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
